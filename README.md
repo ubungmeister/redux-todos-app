@@ -20,6 +20,7 @@ This project is a Task application with a **frontend** built using React, Vite, 
 ## Chnages on the server, added new routes:
 #### 1. /tasks/deleted to handle deletion all completed tasks
 #### 2. /tasks/completeAll to mark all tasks as completed
+#### 3. /tasks/incompleteAll to mark all tasks as not completed
 ---
 
 ## Functionality Overview
