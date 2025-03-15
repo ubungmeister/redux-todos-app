@@ -12,7 +12,7 @@ exports.getAll = (req, res) => {
             .reverse()
             .value();
         res.send(posts);
-    }, 2000);
+    }, 3000);
 };
 
 exports.getCompleted = (req, res) => {
@@ -98,6 +98,22 @@ exports.completeAll = (req, res) => {
       .write();
 
     res.send(completed);
+  };
+
+  exports.incompleteAll = (req, res) => {
+    const { ids } = req.body;
+    if (!ids) {
+      return res.status(422).send("'ids' field must be present in json");
+    }
+    const incompleted = db.get('tasks')
+      .filter((item) => item.completed && ids.includes(item.id))
+      .forEach((item) => {
+        item.completed = false;
+        item.completedDate = undefined;
+      })
+      .write();
+
+    res.send(incompleted);
   };
 
 exports.complete = (req, res) => {

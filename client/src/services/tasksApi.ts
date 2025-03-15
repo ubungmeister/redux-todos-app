@@ -25,10 +25,6 @@ export const tasksApi = createApi({
         url: `/tasks/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, id) => [
-        { type: 'Task', id },
-        { type: 'Task', id: 'LIST' },
-      ],
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         // Optimistically remove the task from the getTasks cache
         const patchResult = dispatch(
@@ -57,7 +53,6 @@ export const tasksApi = createApi({
         url: '/tasks/completed',
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         // Optimistically update the getTasks cache by removing all completed tasks
         const patchResult = dispatch(
@@ -82,7 +77,6 @@ export const tasksApi = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
       async onQueryStarted(newTask, { dispatch, queryFulfilled }) {
         // Generate a temporary ID for the new task
         const tempId = Math.random().toString(36);
@@ -134,7 +128,6 @@ export const tasksApi = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Task', id }],
       async onQueryStarted(updatedTask, { dispatch, queryFulfilled }) {
         //Optimistically update the getTasks cache with the new text
         const patchResult = dispatch(
@@ -162,10 +155,7 @@ export const tasksApi = createApi({
         url: `/tasks/${body.id}/complete`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { id }) => [
-        { type: 'Task', id },
-        { type: 'Task', id: 'LIST' },
-      ],
+
       async onQueryStarted(updatedTask, { dispatch, queryFulfilled }) {
         //Optimistically update the getTasks cache with the new status to "completed"
         const patchResult = dispatch(
@@ -192,10 +182,6 @@ export const tasksApi = createApi({
         url: `/tasks/${body.id}/incomplete`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { id }) => [
-        { type: 'Task', id },
-        { type: 'Task', id: 'LIST' },
-      ],
       async onQueryStarted(updatedTask, { dispatch, queryFulfilled }) {
         //Optimistically update the getTasks cache with the new status to not "completed"
         const patchResult = dispatch(
@@ -216,14 +202,14 @@ export const tasksApi = createApi({
         }
       },
     }),
-    // Complete all tasks /tasks/complete
+    // Complete all tasks /tasks/completeAll
     completeAllTasks: builder.mutation<Task[], { ids: string[] }>({
       query: (body) => ({
         url: `/tasks/completeAll`,
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'Task', id: 'LIST' }],
+
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         //Optimistically update the ALL getTasks cache entities with the new status to "completed"
         const patchResult = dispatch(
@@ -235,6 +221,36 @@ export const tasksApi = createApi({
               if (task) {
                 task.completed = true; //mark as completed
                 task.completedDate = new Date().getTime();
+              }
+            });
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          // Roll back in case of error
+          patchResult.undo();
+        }
+      },
+    }),
+    // Incomplete all tasks /tasks/incompleteAll
+    incompleteAllTasks: builder.mutation<Task[], { ids: string[] }>({
+      query: (body) => ({
+        url: `/tasks/incompleteAll`,
+        method: 'POST',
+        body,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        //Optimistically update the ALL getTasks cache entities with the new status to not "completed"
+        const patchResult = dispatch(
+          tasksApi.util.updateQueryData('getTasks', undefined, (draft) => {
+            // arg.ids is an array of task IDs to be marked as not completed
+            // Find each task in the cached array by ID and mark it as not completed
+            arg.ids.forEach((id) => {
+              const task = draft.find((t) => t.id === id);
+              if (task) {
+                task.completed = false; //mark as not completed
+                task.completedDate = undefined;
               }
             });
           })
@@ -259,4 +275,5 @@ export const {
   useCompleteTaskMutation,
   useIncompleteTaskMutation,
   useCompleteAllTasksMutation,
+  useIncompleteAllTasksMutation,
 } = tasksApi;

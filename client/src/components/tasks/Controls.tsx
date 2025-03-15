@@ -1,5 +1,5 @@
 // Controls.tsx
-import React from 'react';
+import { useState } from 'react';
 import { TaskFilter } from '@/components/tasks/TaskFilter';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import { TbTrashOff } from 'react-icons/tb';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import {
   useCompleteAllTasksMutation,
   useDeleteAllCompletedMutation,
+  useIncompleteAllTasksMutation,
 } from '@/services/tasksApi';
 
 interface ControlsProps {
@@ -18,14 +19,22 @@ interface ControlsProps {
 
 export const Controls: React.FC<ControlsProps> = ({ setFilter, tasks }) => {
   const [completeAllTasks] = useCompleteAllTasksMutation();
+  const [incompleteAllTasks] = useIncompleteAllTasksMutation();
   const [deleteAllCompletedTasks] = useDeleteAllCompletedMutation();
 
-  const incompletedTasks = tasks?.filter((t) => !t.completed) ?? [];
+  const [allTaskCompleted, setAllTaskCompleted] = useState(true);
 
-  // Mark all tasks as completed
-  const handleMarkAllAsCompleted = () => {
-    const ids = incompletedTasks?.map((task) => task.id) ?? [];
-    completeAllTasks({ ids });
+  // Mark all tasks as completed or not completed
+  const handleMarkAllTasks = () => {
+    const ids = tasks?.map((task) => task.id) ?? [];
+
+    if (allTaskCompleted) {
+      completeAllTasks({ ids });
+    } else {
+      incompleteAllTasks({ ids });
+    }
+
+    setAllTaskCompleted((prev) => !prev);
   };
 
   // Delete all completed tasks
@@ -51,7 +60,7 @@ export const Controls: React.FC<ControlsProps> = ({ setFilter, tasks }) => {
         {/* Mark all tasks as completed */}
         <button
           className="btn btn-outline-primary d-flex align-items-center justify-content-center"
-          onClick={handleMarkAllAsCompleted}
+          onClick={handleMarkAllTasks}
         >
           <IoMdCheckboxOutline />
           <span className="text-center ml-1">all</span>
@@ -60,7 +69,7 @@ export const Controls: React.FC<ControlsProps> = ({ setFilter, tasks }) => {
         <TaskFilter setFilter={setFilter} />
       </div>
       {/* Delete completed tasks */}
-      {hascompletedTasks && (
+      {hascompletedTasks.length > 0 && (
         <button
           className="btn btn-outline-primary d-flex align-items-center justify-content-center"
           onClick={handleDeleteAllCompletedTasks}

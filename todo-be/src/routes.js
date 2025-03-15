@@ -58,6 +58,16 @@ module.exports = (app) => {
        */
        app.route('/tasks/completeAll')
        .post(controller.completeAll);
+      /**
+    * POST /tasks/incompleteAll
+    * @summary Completes all tasks, then returns modified tasks
+    * @tags Tasks
+    * @return {array<Task>} 200 - Successful response - application/json
+    * @return {string} 422 - Bad request
+    * @return {string} 400 - ID of task was not found
+       */
+      app.route('/tasks/incompleteAll')
+      .post(controller.incompleteAll);
    /**
     * DELETE /tasks/completed
     * @summary Deletes all completed tasks
