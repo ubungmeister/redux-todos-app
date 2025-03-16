@@ -4,10 +4,8 @@ interface TaskFilterProps {
   setFilter: (filter: Filter) => void;
 }
 
-export const TaskFilter: React.FC<TaskFilterProps> = ({setFilter}) => {
-  
+export const TaskFilter: React.FC<TaskFilterProps> = ({ setFilter }) => {
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
     setFilter(e.target.value as Filter);
   };
 

@@ -49,7 +49,7 @@ export const TasksPage = () => {
                 {hasCompletedTasks && (
                   <div className="mt-3 gap-0.5 flex items-center ">
                     <p>{completedTasksCount}</p>
-                    <p>{completedTasks.length > 1 ? 'task' : 'tasks'} done</p>
+                    <p>{completedTasksCount > 1 ? 'tasks' : 'task'} done</p>
                   </div>
                 )}
               </div>

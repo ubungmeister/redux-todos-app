@@ -1,4 +1,3 @@
-// Controls.tsx
 import { useState } from 'react';
 import { TaskFilter } from '@/components/tasks/TaskFilter';
 import { IoMdCheckboxOutline } from 'react-icons/io';

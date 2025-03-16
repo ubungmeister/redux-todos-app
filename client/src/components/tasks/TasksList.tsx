@@ -7,8 +7,9 @@ type TaskListProps = {
 };
 
 export const TasksList: React.FC<TaskListProps> = ({ tasks, isLoading }) => {
-  if (isLoading)
+  if (isLoading) {
     return <div className="animate-bounce text-center">Loading...</div>;
+  }
 
   return (
     <>

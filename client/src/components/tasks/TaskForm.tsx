@@ -7,13 +7,14 @@ export const TaskForm = () => {
   const [input, setInput] = useState('');
 
   const handleAddTask = async (e: React.FormEvent) => {
+    // Creating a new, waiting for the promise to resolve
     e.preventDefault();
     if (!input.trim()) return;
     try {
       await createTask({
         text: input,
         completed: false,
-      }).unwrap();
+      }).unwrap(); // gettting the actual data from the promise
       toast.success('Task created successfully!', {
         position: 'bottom-right',
       });

@@ -23,6 +23,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleDelete = async () => {
+    // Delete the task, show a toast message
     try {
       await deleteTask(task.id);
       toast.success('Task deleted successfully!', {
@@ -36,6 +37,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     }
   };
 
+  // Update the task text onEnter, onBlur
   const handleTextKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && text.trim()) {
       updateTask({ id: task.id, text });
@@ -45,20 +47,22 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const handleOnBlur = () => {
     if (text !== task.text && text.trim()) {
       updateTask({ id: task.id, text });
+    } else {
+      setText(task.text);
     }
     setIsEditing(false);
   };
 
+  // Toggle editing mode to update the task text
   const handleToggleEditing = () => {
     setIsEditing((prev) => !prev);
   };
 
+  // Toggle the task completed status
   const toggleCompleted = () => {
     if (!task.completed) {
-      console.log('task', task);
       completeTask({ id: task.id });
     } else {
-      console.log('task2', task);
       incompleteTask({ id: task.id });
     }
   };
@@ -77,6 +81,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         {isEditing ? (
           <input
             type="text"
+            placeholder="type something"
             value={text}
             onBlur={handleOnBlur}
             autoFocus
@@ -85,7 +90,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
             className="item-input"
           />
         ) : (
-          <p className="text-lg" onDoubleClick={handleToggleEditing}>
+          <p
+            className={`item-text ${task.completed ? 'line-through' : ''} text-lg`}
+            onDoubleClick={handleToggleEditing}
+          >
             {task.text}
           </p>
         )}
