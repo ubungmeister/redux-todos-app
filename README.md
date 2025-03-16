@@ -8,7 +8,7 @@ This project is a Task application with a **frontend** built using React, Vite, 
 ### 2. Client set up:
 -  Navigate to -> cd client
 -  Install dependencies -> npm install
--  Create a .env file in the client folder to set the API base URL: VITE_BASE_URL=http://localhost:3000
+-  Create a .env file in the client folder to set the API base URL: VITE_BASE_URL=http://localhost:8080
 -  Start the development server: npm run dev
 ### 3. Server set up:
 -   Navigate to -> cd todo-be
