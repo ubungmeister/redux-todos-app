@@ -71,7 +71,7 @@ export const tasksApi = createApi({
       },
     }),
     // POST new task, creates a new task by sending a POST request to `/tasks`.
-    createTask: builder.mutation<Task, Partial<Task>>({
+    createTask: builder.mutation<Task, { text: string }>({
       query: (body) => ({
         url: `/tasks/`,
         method: 'POST',

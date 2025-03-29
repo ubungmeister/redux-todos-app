@@ -28,9 +28,25 @@ export const Controls: React.FC<ControlsProps> = ({ setFilter, tasks }) => {
     const ids = tasks?.map((task) => task.id) ?? [];
 
     if (allTaskCompleted) {
-      completeAllTasks({ ids });
+      const confirmComplete = window.confirm(
+        'Are you sure you want to mark all tasks as completed?'
+      );
+      if (confirmComplete) {
+        completeAllTasks({ ids });
+        toast.success('All tasks marked as completed!', {
+          position: 'bottom-right',
+        });
+      }
     } else {
-      incompleteAllTasks({ ids });
+      const confirmIncomplete = window.confirm(
+        'Are you sure you want to mark all tasks as incomplete?'
+      );
+      if (confirmIncomplete) {
+        incompleteAllTasks({ ids });
+        toast.success('All tasks marked as incompleted!', {
+          position: 'bottom-right',
+        });
+      }
     }
 
     setAllTaskCompleted((prev) => !prev);

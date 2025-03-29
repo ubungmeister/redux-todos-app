@@ -13,7 +13,6 @@ export const TaskForm = () => {
     try {
       await createTask({
         text: input,
-        completed: false,
       }).unwrap(); // gettting the actual data from the promise
       toast.success('Task created successfully!', {
         position: 'bottom-right',

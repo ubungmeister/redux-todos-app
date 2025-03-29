@@ -35,9 +35,9 @@ export const TasksPage = () => {
             <div id="list1" className="card-container ">
               <div className="py-4 px-4 md:px-5">
                 {/* Header */}
-                <p className="text-4xl font-bold text-center mt-3 mb-4 pb-3 text-blue-500">
+                <div className="text-4xl font-bold text-center mt-3 mb-4 pb-3 text-blue-500">
                   <u>My Todo-s</u>
-                </p>
+                </div>
                 {/* Add New Task */}
                 <TaskForm />
                 <hr className="my-4 " />
